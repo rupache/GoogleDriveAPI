@@ -1,50 +1,48 @@
-using ClosedXML.Excel;
 using System;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+
+public class FileFinder
+{
+    public static string GetMostRecentFile(string directoryPath)
+    {
+        // Check if the directory exists
+        if (!Directory.Exists(directoryPath))
+        {
+            throw new DirectoryNotFoundException($"The directory {directoryPath} does not exist.");
+        }
+
+        // Get all files matching the pattern "data_*.xlsx"
+        var files = Directory.GetFiles(directoryPath, "data_*.xlsx");
+
+        // Use LINQ to select the file with the latest date in the filename
+        var mostRecentFile = files.Select(file => new
+        {
+            FileName = file,
+            Date = DateTime.ParseExact(Path.GetFileNameWithoutExtension(file).Substring(8), "yyyyMMdd", CultureInfo.InvariantCulture)
+        })
+        .OrderByDescending(f => f.Date) // Order by date descending
+        .FirstOrDefault(); // Take the most recent file
+
+        // If there's a file, return its full path, otherwise return null
+        return mostRecentFile?.FileName;
+    }
+}
 
 class Program
 {
-    static void Main(string[] args)
+    static void Main()
     {
-        // Path to the Excel file
-        var filePath = @"path\to\your\extracted_content.xlsx"; // Replace with the actual file path
-
-        // Open the Excel file
-        using (var workbook = new XLWorkbook(filePath))
+        string directoryPath = @"path\to\your\files"; // Replace with your file share location path
+        try
         {
-            // Get the first worksheet
-            var worksheet = workbook.Worksheet(1);
-
-            // Initialize counters
-            int a = 0;
-            int b = 0;
-            int c = 0;
-
-            // Assume that the status text is in the first column and starts from the second row
-            for (int row = 2; row <= worksheet.LastRowUsed().RowNumber(); row++)
-            {
-                // Read the value of the first cell in the current row
-                var cellValue = worksheet.Cell(row, 1).GetString();
-
-                // Increment the appropriate counter based on the cell content
-                if (cellValue == "a")
-                {
-                    a += (int)worksheet.Cell(row, 2).GetValue<int>();
-                }
-                else if (cellValue == "b")
-                {
-                    b += (int)worksheet.Cell(row, 2).GetValue<int>();
-                }
-                else if (cellValue == "c")
-                {
-                    c += (int)worksheet.Cell(row, 2).GetValue<int>();
-                }
-            }
-
-            
+            var mostRecentFile = FileFinder.GetMostRecentFile(directoryPath);
+            Console.WriteLine($"The most recent file is: {mostRecentFile}");
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
         }
-
-        // Keep the console window open
-        Console.ReadLine();
     }
 }
