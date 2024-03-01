@@ -14,20 +14,34 @@ class Program
             // Get the first worksheet
             var worksheet = workbook.Worksheet(1);
 
-            // Define the range to read (adjust if necessary)
-            var range = worksheet.RangeUsed();
+            // Initialize counters
+            int a = 0;
+            int b = 0;
+            int c = 0;
 
-            // Loop through the rows of the range
-            foreach (var row in range.Rows())
+            // Assume that the status text is in the first column and starts from the second row
+            for (int row = 2; row <= worksheet.LastRowUsed().RowNumber(); row++)
             {
-                // Loop through the cells of the row
-                foreach (var cell in row.Cells())
+                // Read the value of the first cell in the current row
+                var cellValue = worksheet.Cell(row, 1).GetString();
+
+                // Increment the appropriate counter based on the cell content
+                if (cellValue == "a")
                 {
-                    // Write the cell value to the console
-                    Console.Write($"{cell.Value} ");
+                    a += (int)worksheet.Cell(row, 2).GetValue<int>();
                 }
-                Console.WriteLine();
+                else if (cellValue == "b")
+                {
+                    b += (int)worksheet.Cell(row, 2).GetValue<int>();
+                }
+                else if (cellValue == "c")
+                {
+                    c += (int)worksheet.Cell(row, 2).GetValue<int>();
+                }
             }
+
+            
+        }
         }
 
         // Keep the console window open
