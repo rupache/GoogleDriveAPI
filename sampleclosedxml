@@ -1,0 +1,36 @@
+using ClosedXML.Excel;
+using System;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // Path to the Excel file
+        var filePath = @"path\to\your\extracted_content.xlsx"; // Replace with the actual file path
+
+        // Open the Excel file
+        using (var workbook = new XLWorkbook(filePath))
+        {
+            // Get the first worksheet
+            var worksheet = workbook.Worksheet(1);
+
+            // Define the range to read (adjust if necessary)
+            var range = worksheet.RangeUsed();
+
+            // Loop through the rows of the range
+            foreach (var row in range.Rows())
+            {
+                // Loop through the cells of the row
+                foreach (var cell in row.Cells())
+                {
+                    // Write the cell value to the console
+                    Console.Write($"{cell.Value} ");
+                }
+                Console.WriteLine();
+            }
+        }
+
+        // Keep the console window open
+        Console.ReadLine();
+    }
+}
