@@ -1,42 +1,41 @@
 # GoogleDriveAPI
 Express JS and Node JS code to use Google Drive APIs
+// Initialize counters
+int a = 0;
+int b = 0;
+int c = 0;
 
-public static FileDateAndName GetMostRecentCsvFile(string doctype, string directoryPath, log4net.ILog log)
+// Read the CSV file
+var lines = File.ReadAllLines("path_to_your_csv_file.csv");
+
+// Skip the header row by starting with index 1 (if the CSV has a header)
+for (int i = 1; i < lines.Length; i++)
 {
-    // Check if the directory exists
-    if (!Directory.Exists(directoryPath))
+    // Split the line into cells
+    var cells = lines[i].Split(',');
+
+    // Assuming that the status text is in the first cell (index 0)
+    var cellValueStatus = cells[0].Trim().ToLower();
+
+    // Assuming the input value is in the second cell (index 1)
+    var cellValueInput = cells[1].Trim().ToLower();
+
+    // Increment the appropriate counter based on the cell content
+    if (cellValueStatus == excelCella.ToLower() && cellValueInput == excelCell.ToLower())
     {
-        log.Info($"The directory {directoryPath} does not exist.");
-        return null; // Return null immediately if the directory does not exist
+        a++;
     }
-
-    // Get all files matching the pattern "doctype_*.csv"
-    var files = Directory.GetFiles(directoryPath, doctype + "_*.csv");
-
-    // Use LINQ to select the file with the latest date in the filename
-    var mostRecentFile = files
-        .Select(file => new
-        {
-            FileName = file,
-            // Assuming the date is always immediately after "doctype_" and is 8 characters long
-            Date = DateTime.TryParseExact(Path.GetFileNameWithoutExtension(file).Substring(doctype.Length + 1, 8), "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime fileDate) ? fileDate : (DateTime?)null
-        })
-        .Where(f => f.Date != null) // Exclude files where the date could not be parsed
-        .OrderByDescending(f => f.Date) // Order by date descending
-        .FirstOrDefault(); // Take the most recent file
-
-    if (mostRecentFile == null)
+    else if (cellValueStatus == excelCellb.ToLower() && cellValueInput == excelCell.ToLower())
     {
-        log.Info("No CSV files found matching the pattern.");
-        return null; // Return null if no files are found
+        b++;
     }
-
-    FileDateAndName fileToBeReturned = new FileDateAndName
+    else if (cellValueStatus == excelCellc.ToLower() && cellValueInput == excelCell.ToLower())
     {
-        FileName = mostRecentFile.FileName,
-        FileDate = mostRecentFile.Date?.ToString("yyyy-MM-dd")
-    };
-
-    // If there's a file, return its full path, otherwise return null
-    return fileToBeReturned;
+        c++;
+    }
 }
+
+// Your counts are now in variables a, b, c
+Console.WriteLine($"Count A: {a}");
+Console.WriteLine($"Count B: {b}");
+Console.WriteLine($"Count C: {c}");
