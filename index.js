@@ -106,7 +106,7 @@ async function listFilesWithLocations() {
                     requestBody: {
                         role: 'writer',
                         type: 'user',
-                        emailAddress: 'ngsrupesh@gmail.com', // Replace with the email address of the user you want to share with
+                        emailAddress: 'nupesfh@gmail.com', // Replace with the email address of the user you want to share with
                     },
                     fields: 'id',
                 });
@@ -139,7 +139,7 @@ async function createFolderAndShare() {
     const folderMetadata = {
         name: '8000',
         mimeType: 'application/vnd.google-apps.folder',
-        parents: ['1010voEQ8JBzWdTlhysX1EWXQiwhP4Yb5'], // Replace with the ID of the parent folder
+        parents: ['f'], // Replace with the ID of the parent folder
     };
 
     const folderResponse = await drive.files.create({
